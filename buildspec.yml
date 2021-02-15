@@ -1,0 +1,20 @@
+---
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - IMAGE_URI_APP=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME_GO
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+  build:
+    commands:
+      - docker build -t go-app .
+      - docker tag go-app:$IMAGE_TAG $IMAGE_URI_APP
+  post_build:
+    commands:
+      - docker push $IMAGE_URI_APP:$IMAGE_TAG
+      - echo '[{"name":"go-app","imageUri":"__URI_APP__"}]' > imagedef.json
+      - sed -ie "s@__URI_APP__@${IMAGE_URI_APP}:${IMAGE_TAG}@" imagedef.json
+artifacts:
+  files:
+    - imagedef.json
