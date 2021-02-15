@@ -16,5 +16,5 @@ func main() {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	hello := os.Getenv("MY_VARIABLE")
-	fmt.Fprintf(w, "SERVICE2 MY_VARIABLE:%s", hello)
+	fmt.Fprintf(w, "SERVICE2 MY_VARIABLE111:%s", hello)
 }
